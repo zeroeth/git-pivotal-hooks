@@ -33,13 +33,16 @@ directory and make it executable for you. It'll also copy a file called
 .pivrc.sample to your main project directory, and add .pivrc to your local 
 .gitignore, since that's where you're about to put your Pivotal API token.
 
-Edit .pivrc.sample by filling in your Pivotal API token, project ID #, and initials (or 
-whatever Pivotal uses to identify you on stories, I suppose), then change the name:
+Edit .pivrc.sample by filling in your Pivotal API token, project ID #, and initials 
+(or whatever Pivotal uses to identify you on stories, I suppose), then change the name:
 
 	mv .pivrc.sample .pivrc
 
-That's it, you're good to go! Whenever you make a commit in that project, you'll get a 
-list of all of your Pivotal stories, and the chance to choose which one(s) to add to 
+Now you can go to the admin settings for your GitHub repository and set up GitHub's 
+Pivotal Tracker post-receive hook by putting in your same Pivotal API. 
+
+That's it, you're good to go! Whenever you make a commit in that project, you'll get 
+a list of all of your Pivotal stories, and the chance to choose which one(s) to add to 
 your commit message so that the links to that commit will be added to the relevant 
 Pivotal story/storieswhen you push to GitHub.
 
