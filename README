@@ -1,80 +1,47 @@
-Copyright (c) 2011 Socialize, Inc.
+This script creates a prepare-commit-msg hook for git. Whenever you commit, 
+it connects to Pivotal Tracker, gets all the stories you own on the given 
+project, and adds the story number(s) to your commit message. With GitHub's 
+Pivotal post-receive hook set up, that will add a link to each commit
+to the relevant story on Pivotal whenever you push to GitHub.  
 
-Permission is hereby granted, free of charge, to any person obtaining a copy of
-this software and associated documentation files (the "Software"), to deal in
-the Software without restriction, including without limitation the rights to
-use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies
-of the Software, and to permit persons to whom the Software is furnished to do
-so, subject to the following conditions: 
+## Global setup   
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.  
+Clone this repository somewhere. Hypothetically, let's say you stuck it in
+"~/code/git-pivotal-hooks".
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.  
+Make the setup script executable:
 
+	chmod a+x gitpiv-setup.sh
 
+Add the following to your .bashrc (replacing the path with the actual path to
+your clone of this repository, of course):
 
-GitHub provides the ability to connect git commits with active stories on
-pivotal. The goal of this project is to provide some simple git commit hooks
-to help make this connection easier
+	alias gitpiv=". ~/code/git-pivotal-hooks/gitpiv-setup.sh"
 
+Great! Now whenever you have a local project you want to link to a Pivotal 
+Tracker project, you can set it up as follows:  
 
+## Project setup  
 
+Make sure your current project is set up with git already. Then in the main 
+directory of your current project, just run
 
-### active_stories.py ###
+	gitpiv
 
-active_stories.py is meant to be used as prepare-commit-msg for git. It
-connects to pivotal, gets all the stories that match your provided filter, and
-adds the story numbers to the git commit. 
+That will copy the appropriate prepare-commit-msg hook to your local .git hooks 
+directory and make it executable for you. It'll also copy a file called 
+.pivrc.sample to your main project directory, and add .pivrc to your local 
+.gitignore, since that's where you're about to put your Pivotal API token.
 
-These stories are added in the form:
+Edit .pivrc.sample by filling in your Pivotal API token, project ID #, and initials (or 
+whatever Pivotal uses to identify you on stories, I suppose), then change the name:
 
-[#<NUMBER> #<NUBMER>] for each story number matching your filter. 
+	mv .pivrc.sample .pivrc
 
+That's it, you're good to go! Whenever you make a commit in that project, you'll get a 
+list of all of your Pivotal stories, and the chance to choose which one(s) to add to 
+your commit message so that the links to that commit will be added to the relevant 
+Pivotal story/storieswhen you push to GitHub.
 
-SET UP:
-In order to setup your repository to work with this script, you need to
-perform the following steps:
-
-1) Install GitPython:
-sudo easy_install gitpython
-
-
-2) Create the following local git settings:
-git config --local pivotal.token 'YOUR PIVOTAL ACCESS TOKEN'
-git config --local pivotal.filter 'YOUR FILTER' 
-git config --local pivotal.projectid 'YOUR PROJECT ID'
-
-An example filter is:
-
-mywork:AA current_state:started 
-
-Where AA is your initials in the pivotal system. This filter will return all
-stories that you are working on that are in a started state. 
-
-3) Make sure git can get your path. On my Mac OS X system I needed to create a
-symbolic link:
-
-sudo ln -s /Library/Frameworks/Python.framework/Versions/2.7/lib/python2.7/site-packages/ /Library/Python/2.7/site-packages
-
-4) copy the file to "<REPOSITORY_BASE>/.git/hooks/prepare-commit-msg" and make
-it executable. 
-
-
-After the setup every time you create a commit the script will run and prepend
-the ticket numbers to your commit message. 
-
-
-###########################
-
-
-
- 
-
-
+Major thanks to npetrell, whose active_stories.py provided the meat of the 
+prepare-commit-msg here.
