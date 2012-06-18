@@ -35,7 +35,7 @@ directory and make it executable for you. It'll also copy a file called
 
 Edit .pivrc.sample by filling in your Pivotal API token, project ID #, and initials 
 (or whatever Pivotal uses to identify you on stories, I suppose) (or whatever
-other filter(s) you prefer - just remember, spacing matters!), then rename the file:
+other filter(s) you prefer!) (spacing matters!), then rename of the file:
 
 	mv .pivrc.sample .pivrc
 

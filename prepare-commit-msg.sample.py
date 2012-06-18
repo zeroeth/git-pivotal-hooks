@@ -36,7 +36,7 @@ def load_config():
         for line in f:
             text = re.split(":\s+", line.strip())
             pivotal_items[text[0]] = text[1]
-    return pivotal_items['token'], "owner:" + pivotal_items['initials'], pivotal_items['project_id']
+    return pivotal_items['token'], pivotal_items['filter'], pivotal_items['project_id']
 
 
 def load_document(token, filter, project_id):
@@ -74,19 +74,24 @@ if __name__ == '__main__':
 
             i += 1
     else:
-        print "No started stories found. Not adding anything to commit message."
+        print "No stories found. Not adding anything to commit message."
         sys.exit()
 
     sys.stdin = open('/dev/tty')
     items_to_include = re.split(",s*", raw_input(
-        "Please choose which storie(s) this commit relates to (as a comma separated list):"))
+        "Please choose which story/stories this commit relates to (as a comma separated list):"))
     items_to_include = [i.strip() for i in items_to_include if i]
 
     if items_to_include:
         for i in items_to_include:
-            stories_to_add.append(potential_stories_to_add[int(i) - 1])
-    else:
-        print "No started stories found. Not adding anything to commit message."
+            index = int(i) - 1
+            if index < len(potential_stories_to_add):
+                stories_to_add.append(potential_stories_to_add[index])
+            else:
+                print "Sorry, %s was not an option." % i
+
+    if len(stories_to_add) == 0:
+        print "No stories found. Not adding anything to commit message."
         sys.exit()
 
     stringified_stories = ['#%s' % story[0] for story in stories_to_add]
