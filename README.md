@@ -30,14 +30,13 @@ directory of your current project, just run
 
 That will copy the appropriate prepare-commit-msg hook to your local .git hooks 
 directory and make it executable for you. It'll also copy a file called 
-.pivrc.sample to your main project directory, and add .pivrc to your local 
-.gitignore, since that's where you're about to put your Pivotal API token.
+{project_name}.sample in your ~/.pivrc directory.
 
 Edit .pivrc.sample by filling in your Pivotal API token, project ID #, and initials 
 (or whatever Pivotal uses to identify you on stories, I suppose) (or whatever
 other filter(s) you prefer - but remember, spacing matters!), then rename the file:
 
-	mv .pivrc.sample .pivrc
+	mv ~/.pivrc/{project_name}.sample ~/.pivrc/{project_name}
 
 Now you can go to the admin settings for your GitHub repository and set up GitHub's 
 Pivotal Tracker post-receive hook by putting in your same Pivotal API. 
