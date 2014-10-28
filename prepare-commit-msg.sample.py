@@ -29,10 +29,21 @@ import os.path
 import re
 from xml.dom.minidom import parse
 
+colors = {
+        'accepted':   '\033[92m',
+        'started':    '\033[96m',
+        'finished':   '\033[94m',
+        'unstarted':  '\033[97m',
+        'unscheduled':'\033[97m',
+        'delivered':  '\033[93m',
+        'rejected':   '\033[91m',
+        'clear':      '\033[0m'
+}
 
 def load_config():
     pivotal_items = {}
-    with open(".pivrc") as f:
+    rcfile = os.path.expanduser("~/.pivrc/"+os.path.basename(os.getcwd()))
+    with open(rcfile) as f:
         for line in f:
             text = re.split(":\s+", line.strip())
             pivotal_items[text[0]] = text[1]
@@ -48,8 +59,8 @@ def load_document(token, filter, project_id):
     return result
 
 if __name__ == '__main__':
-
-    if not os.path.isfile(".pivrc"):
+    rcfile = os.path.expanduser("~/.pivrc/"+os.path.basename(os.getcwd()))
+    if not os.path.isfile(rcfile):
         sys.exit()
 
     files = sys.argv[0]
@@ -68,8 +79,11 @@ if __name__ == '__main__':
         for story in stories:
             id = story.getElementsByTagName('id')[0].firstChild.wholeText
             name = story.getElementsByTagName('name')[0].firstChild.wholeText
+            state = story.getElementsByTagName('current_state')[0].firstChild.wholeText
 
-            print "%s: %s -- %s" % (i, id, name)
+            state = colors[state] + ("%11s" % state) + colors['clear']
+
+            print "%3s: %s [%s] -- %s" % (i, id, state, name)
             potential_stories_to_add.append((id, name))
 
             i += 1
