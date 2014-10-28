@@ -31,7 +31,7 @@ from xml.dom.minidom import parse
 
 colors = {
         'accepted':   '\033[92m',
-        'started':    '\033[96m',
+        'started':    '\033[95m',
         'finished':   '\033[94m',
         'unstarted':  '\033[97m',
         'unscheduled':'\033[97m',
@@ -76,6 +76,7 @@ if __name__ == '__main__':
     if stories:
         i = 1
         print "Available Stories"
+        stories = sorted(stories, key=lambda story: story.getElementsByTagName('current_state')[0].firstChild.wholeText)
         for story in stories:
             id = story.getElementsByTagName('id')[0].firstChild.wholeText
             name = story.getElementsByTagName('name')[0].firstChild.wholeText
